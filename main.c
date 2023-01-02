@@ -11,7 +11,7 @@ int main(){
     connectToServer("172.105.76.204",1234, "Diadji");
     
     char labyrintheName[100];
-    waitForLabyrinth("TRAINING DONTMOVE", labyrintheName, &sizeX, &sizeY);
+    waitForLabyrinth("TRAINING DONTMOVE timeout=1000 start=0", labyrintheName, &sizeX, &sizeY);
     
     int* lab = malloc(sizeof(int) * sizeX * sizeY * 5);
     getLabyrinth (lab, &tileN, &tileE, &tileS, &tileW, &tileItem);
@@ -27,7 +27,7 @@ int main(){
     int x, y;				
     do{
         printf("choississez un coup\n\n");
-        printf(" où inserer\n");
+        printf("où inserer\n");
         printf("numero de ligne ou colonne\n");
         printf("rotation\n");
         printf("coordonnées de déplacement\n");
@@ -38,6 +38,7 @@ int main(){
         p_move->rotation = rotation;
         p_move->x = x;
         p_move->y = y;
+        
         
         sendMove(p_move);
         getMove(p_move_adversaire);
