@@ -3,6 +3,8 @@
 #include <string.h>
 #include "labyrinthAPI.h"
 #include "clientAPI.h"
+#include "donnees.h"
+
 
 int main(){
     int sizeX;
@@ -11,11 +13,11 @@ int main(){
     connectToServer("172.105.76.204",1234, "Diadji");
     
     char labyrintheName[100];
-    waitForLabyrinth("TRAINING DONTMOVE timeout=1000 start=0", labyrintheName, &sizeX, &sizeY);
+    waitForLabyrinth("TRAINING DONTMOVE timeout=1000 start=0 display=debug", labyrintheName, &sizeX, &sizeY);
     
     int* lab = malloc(sizeof(int) * sizeX * sizeY * 5);
     getLabyrinth (lab, &tileN, &tileE, &tileS, &tileW, &tileItem);
-    
+     
     printLabyrinth();
     t_move* p_move = malloc(sizeof(t_move));
     t_move* p_move_adversaire = malloc(sizeof(t_move));
@@ -24,7 +26,13 @@ int main(){
     insert = (t_insertion)inserer;
 	int number;				
 	int rotation;
-    int x, y;				
+    int x, y;	
+
+    t_joueur* joueur;
+    t_adversaire* adversaire;
+    t_labyrinthe* labyrinthe;
+    init_donnees(joueur, adversaire, labyrinthe, sizeX, sizeY);
+
     do{
         printf("choississez un coup\n\n");
         printf("où inserer\n");
@@ -40,11 +48,20 @@ int main(){
         p_move->y = y;
         
         
-        sendMove(p_move);
-        getMove(p_move_adversaire);
+        if (sendMove(p_move) == WINNING_MOVE){
+        printf("vous avez gagné");
+        break;
+        }
+        miseAJourDonnees(joueur, adversaire, labyrinthe, p_move, p_move_adversaire);
+        printLabyrinth();
+        if (getMove(p_move_adversaire) == LOOSING_MOVE){
+            printf("vous avez perdu");
+            break;
+        }
+        miseAJourDonnees(joueur, adversaire, labyrinthe, p_move, p_move_adversaire);
         printLabyrinth();
     }
-    while (sendMove(p_move) == NORMAL_MOVE && getMove(p_move_adversaire) == NORMAL_MOVE);
+    while (1);
 
     closeConnection(); 
 }
