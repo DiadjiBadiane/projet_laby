@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "clientAPI.h"
+#include "labyrinthAPI.h"
+
 
 typedef struct{
     int x;
@@ -9,9 +12,9 @@ typedef struct{
 }t_joueur;
 
 typedef struct{
-    int x_adversaire;
-    int y_adversaire;
-    int nextItemAdverse;
+    int x;
+    int y;
+    int nextItem;
     t_move moveJoueur;
 }t_adversaire;
 
@@ -22,5 +25,5 @@ typedef struct{
     int sizeY;
 }t_labyrinthe;
 
-int init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int sizeX, int sizeY);
-int miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire);
+void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int sizeX, int sizeY);
+void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire);
