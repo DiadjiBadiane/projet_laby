@@ -19,11 +19,15 @@ typedef struct{
 }t_adversaire;
 
 typedef struct{
+    int x;
+    int y;
+}t_tresor;
+
+typedef struct{
     t_joueur joueur;
     t_adversaire adversaire;
-    int sizeX;
-    int sizeY;
+    int* copy_lab;
 }t_labyrinthe;
 
-void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int sizeX, int sizeY);
-void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire);
+void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int* lab, int sizeX, int sizeY);
+void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire, int* lab);

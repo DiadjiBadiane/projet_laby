@@ -4,6 +4,7 @@
 #include "labyrinthAPI.h"
 #include "clientAPI.h"
 #include "donnees.h"
+#include "jeu.h"
 
 
 int main(){
@@ -21,33 +22,20 @@ int main(){
     printLabyrinth();
     t_move* p_move = malloc(sizeof(t_move));
     t_move* p_move_adversaire = malloc(sizeof(t_move));
-    int inserer;
-    t_insertion insert;	
-    insert = (t_insertion)inserer;
-	int number;				
-	int rotation;
-    int x, y;	
+  	
 
-    t_joueur* joueur;
-    t_adversaire* adversaire;
-    t_labyrinthe* labyrinthe;
+    t_joueur* joueur = malloc(sizeof(t_joueur));
+    t_adversaire* adversaire = malloc(sizeof (t_adversaire));
+    t_labyrinthe* labyrinthe = malloc(sizeof(t_labyrinthe));
     init_donnees(joueur, adversaire, labyrinthe, sizeX, sizeY);
+    int* tab_deplacement;
+    t_tile* tab_tile;
+    int x_depart, x_arrivee;
 
     do{
-        printf("choississez un coup\n\n");
-        printf("où inserer\n");
-        printf("numero de ligne ou colonne\n");
-        printf("rotation\n");
-        printf("coordonnées de déplacement\n");
-
-        scanf("%d %d %d %d %d",&inserer,&number,&rotation,&x,&y);
-        p_move->insert = insert;
-        p_move->number = number;
-        p_move->rotation = rotation;
-        p_move->x = x;
-        p_move->y = y;
-        
-        
+        int init_tab_tuile(lab, tab_tile, sizeX, sizeY);
+        int deplacement(x_depart, y_depart, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile);
+        int coup_joue(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move);
         if (sendMove(p_move) == WINNING_MOVE){
         printf("vous avez gagné");
         break;

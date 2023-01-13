@@ -3,7 +3,7 @@
 #include "donnees.h"
 
 
-void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int sizeX, int sizeY){
+void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int* lab, int sizeX, int sizeY){
     joueur->x = 0;
     joueur->y = 0;
     joueur->nextItem = 1;
@@ -18,11 +18,10 @@ void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyr
     labyrinthe->adversaire.x = adversaire->x;
     labyrinthe->adversaire.y = adversaire->y;
     labyrinthe->adversaire.nextItem = adversaire->nextItem;  
-    labyrinthe->sizeX = sizeX;
-    labyrinthe->sizeY = sizeY;
+    labyrinthe->copy_lab = lab;
 }
 
-void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire){
+void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire, int* lab){
     joueur->x = p_move->x;
     joueur->y = p_move->y;
     joueur->nextItem = p_move->nextItem;
@@ -37,5 +36,6 @@ void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* l
     labyrinthe->adversaire.x = adversaire->x;
     labyrinthe->adversaire.y = adversaire->y;
     labyrinthe->adversaire.nextItem = adversaire->nextItem;  
+    labyrinthe->copy_lab = lab;
 }
 
