@@ -12,12 +12,6 @@ void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyr
     adversaire->y = sizeY - 1;
     adversaire->nextItem = 24;
 
-    labyrinthe->joueur.x = joueur->x;
-    labyrinthe->joueur.y = joueur->y;
-    labyrinthe->joueur.nextItem = joueur->nextItem;
-    labyrinthe->adversaire.x = adversaire->x;
-    labyrinthe->adversaire.y = adversaire->y;
-    labyrinthe->adversaire.nextItem = adversaire->nextItem;  
     labyrinthe->copy_lab = lab;
 }
 
@@ -30,12 +24,6 @@ void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* l
     adversaire->y = p_move_adversaire->y;
     adversaire->nextItem = p_move_adversaire->nextItem;
 
-    labyrinthe->joueur.x = joueur->x;
-    labyrinthe->joueur.y = joueur->y;
-    labyrinthe->joueur.nextItem = joueur->nextItem;
-    labyrinthe->adversaire.x = adversaire->x;
-    labyrinthe->adversaire.y = adversaire->y;
-    labyrinthe->adversaire.nextItem = adversaire->nextItem;  
     labyrinthe->copy_lab = lab;
 }
 
