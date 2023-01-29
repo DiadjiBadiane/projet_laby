@@ -5,7 +5,7 @@ CC = gcc
 CCFLAGS = -Wall
 
 # fichiers du projet
-SRC = labyrinthAPI.c main.c clientAPI.c donnees.c
+SRC = labyrinthAPI.c main.c clientAPI.c donnees.c jeu.c
 OBJ = $(SRC:.c=.o)
 EXEC = run.out
 
@@ -17,7 +17,8 @@ all: $(EXEC)
 main.o: main.c 
 clientAPI.o: clientAPI.c clientAPI.h
 labyrintheAPI.o: labyrinthAPI.c labyrinthAPI.h	
-donnees.O: donnnees.c donnees.h
+donnees.o: donnees.c donnees.h
+jeu.o: jeu.c jeu.h
 
 # règles de compilation
 %.o: %.c

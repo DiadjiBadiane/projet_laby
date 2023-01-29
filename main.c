@@ -13,7 +13,7 @@ int main(){
     connectToServer("172.105.76.204",1234, "Diadjii");
 
     char labyrintheName[100];
-    waitForLabyrinth("TRAINING DONTMOVE timeout=1000 start=0 display=debug", labyrintheName, &sizeX, &sizeY);
+    waitForLabyrinth("TRAINING DONTMOVE timeout=1000 start=0", labyrintheName, &sizeX, &sizeY);
     
     int* lab = malloc(sizeof(int) * sizeX * sizeY * 5);
     getLabyrinth (lab, &tileN, &tileE, &tileS, &tileW, &tileItem);
@@ -24,7 +24,6 @@ int main(){
     t_labyrinthe* labyrinthe = malloc(sizeof(t_labyrinthe));
     init_donnees(joueur, adversaire, labyrinthe, lab, sizeX, sizeY);
     t_tile* tab_tile = malloc(sizeof(t_tile));
-    init_tab_tuile(lab, tab_tile, sizeX, sizeY);
 
     int* tab_deplacement = malloc(sizeof(int) * sizeX * sizeY);
     t_move* p_move = malloc(sizeof(t_move));
@@ -32,6 +31,7 @@ int main(){
 
 
     do{
+        init_tab_tuile(lab, tab_tile, sizeX, sizeY);
         coup_joue(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move);
         if (sendMove(p_move) == WINNING_MOVE){
             printf("vous avez gagné");

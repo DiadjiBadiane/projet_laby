@@ -43,8 +43,8 @@ int deplacement(int x_depart, int y_depart, int x_arrivee, int y_arrivee, int* t
                            a ++;
                         }
                     }
-                    else if (tab_tile[ligne * sizeY + colonne].tileS != 1 && tab_tile[(ligne + 1) * sizeX + colonne].tileN != 1){
-                        if (ligne - 1 < sizeX && tab_deplacement[(ligne + 1) * sizeX + colonne] == r){
+                    else if (tab_tile[ligne * sizeX + colonne].tileS != 1 && tab_tile[(ligne + 1) * sizeX + colonne].tileN != 1){
+                        if (ligne + 1 < sizeY && tab_deplacement[(ligne + 1) * sizeX + colonne] == r){
                             tab_deplacement[ligne * sizeX + colonne] = r + 1;
                             a ++;
                         }
@@ -93,36 +93,93 @@ int coup_joue(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t_ti
     t_insertion insert;	
     int number, rotation;
     for(number = 1; number < sizeY; number ++){
-        for (rotation = 0; rotation <= 3; rotation ++){
-            for (insert = 0; insert <= 1; insert ++){
-                }
-                if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
-                    p_move->insert = insert;
-                    p_move->number = number;
-                    p_move->rotation = rotation;
-                    p_move->x = x_arrivee;
-                    p_move->y = y_arrivee;
-                    return 0;
+        if (number % 2 == 0){
+        }
+        else{
+            for (rotation = 0; rotation <= 3; rotation ++){
+                for (insert = 0; insert <= 1; insert ++){
+                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
+                        p_move->insert = insert;
+                        p_move->number = number;
+                        p_move->rotation = rotation;
+                        p_move->x = x_arrivee;
+                        p_move->y = y_arrivee;
+                        return 0;
+                    }
                 }  
             }
-            for (insert = 2; insert <= 3; insert ++){
-                if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
-                    p_move->insert = insert;
-                    p_move->number = number;
-                    p_move->rotation = rotation;
-                    p_move->x = x_arrivee;
-                    p_move->y = y_arrivee;
-                    return 0;
+        }
+    }
+
+    for(number = 1; number < sizeX; number ++){
+        if (number % 2 == 0){
+            for (rotation = 0; rotation <= 3; rotation ++){
+                for (insert = 2; insert <= 3; insert ++){
+                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
+                        p_move->insert = insert;
+                        p_move->number = number;
+                        p_move->rotation = rotation;
+                        p_move->x = x_arrivee;
+                        p_move->y = y_arrivee;
+                        return 0;
+                    }
                 }
             }
         }
     }
-    p_move->insert = insert;
-    p_move->number = number;
-    p_move->rotation = rotation;
+    
+
+
+    if (tab_tile[joueur->x + sizeX * joueur->y].tileN != 1 && tab_tile[joueur->x + sizeX * (joueur->y - 1)].tileS != 1){
+        if (joueur->y - 1  > 0){
+            p_move->insert = 0;
+            p_move->number = 1;
+            p_move->rotation = 0;
+            p_move->x = joueur->x;
+            p_move->y = joueur->y - 1;
+            return 0;
+        }
+    }
+
+    if (tab_tile[joueur->x + sizeX * joueur->y].tileS != 1 && tab_tile[joueur->x + sizeX * (joueur->y + 1)].tileN != 1){
+        if (joueur->y + 1 < sizeY){
+            p_move->insert = 0;
+            p_move->number = 1;
+            p_move->rotation = 0;
+            p_move->x = joueur->x;  
+            p_move->y = joueur->y + 1;
+            return 0;
+        }
+    }
+
+    if (tab_tile[joueur->x + sizeX * joueur->y].tileE != 1 && tab_tile[joueur->x + 1 + sizeX * joueur->y].tileW != 1){
+        if (joueur->x + 1 < sizeX ){
+            p_move->insert = 0;
+            p_move->number = 1;
+            p_move->rotation = 0;
+            p_move->x = joueur->x + 1;
+            p_move->y = joueur->y;
+            return 0;
+        }
+    }
+
+    if (tab_tile[joueur->x + sizeX * joueur->y].tileW != 1 && tab_tile[joueur->x - 1 + sizeX * joueur->y].tileS != 1){
+        if (joueur->x - 1 > 0){
+            p_move->insert = 0;
+            p_move->number = 1;
+            p_move->rotation = 0;
+            p_move->x = joueur->x - 1;
+            p_move->y = joueur->y;
+            return 0;
+        }
+    }
+
+    p_move->insert = 0;
+    p_move->number = 1;
+    p_move->rotation = 0;
     p_move->x = joueur->x;
     p_move->y = joueur->y;
-    return 0;
+    return 0;    
 }
 
 
