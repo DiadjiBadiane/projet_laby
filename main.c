@@ -10,7 +10,7 @@ int main(){
     int sizeX;
     int sizeY;
     int tileN, tileE, tileS, tileW, tileItem;
-    connectToServer("172.105.76.204",1234, "Diadjii");
+    connectToServer("172.105.76.204",1234, "diadji");
 
     char labyrintheName[100];
     waitForLabyrinth("TRAINING DONTMOVE timeout=1000 start=0", labyrintheName, &sizeX, &sizeY);
@@ -31,8 +31,7 @@ int main(){
 
 
     do{
-        init_tab_tuile(lab, tab_tile, sizeX, sizeY);
-        coup_joue(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move);
+        coup_joue(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move, lab);
         if (sendMove(p_move) == WINNING_MOVE){
             printf("vous avez gagné");
             break;
@@ -54,5 +53,4 @@ int main(){
     free(p_move);
     free(p_move_adversaire); 
     closeConnection(); 
-    
 }
