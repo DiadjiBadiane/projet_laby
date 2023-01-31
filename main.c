@@ -31,19 +31,24 @@ int main(){
 
 
     do{
-        coup_joue(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move, lab);
-        if (sendMove(p_move) == WINNING_MOVE){
+        if (coup_gagnant(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move,p_move_adversaire, lab) == -1){
+            coup_joue(joueur, sizeX, sizeY, tab_tile, p_move, p_move_adversaire, lab);
+            sendMove(p_move);
+        }
+        else if (sendMove(p_move) == WINNING_MOVE){
             printf("vous avez gagné");
             break;
         }
         miseAJourDonnees(joueur, adversaire, labyrinthe, p_move, p_move_adversaire, lab);
         printLabyrinth();
+        printf("\n\nmoi\n\n");
         if (getMove(p_move_adversaire) == LOOSING_MOVE){
             printf("vous avez perdu");
             break;
         }
         miseAJourDonnees(joueur, adversaire, labyrinthe, p_move, p_move_adversaire, lab);
         printLabyrinth();
+        printf("\n\nadversaire\n\n");
     }
     while (1);
     free(joueur);
