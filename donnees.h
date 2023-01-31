@@ -28,3 +28,5 @@ typedef struct{
 
 void init_donnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, int* lab, int sizeX, int sizeY);
 void miseAJourDonnees(t_joueur* joueur,t_adversaire* adversaire, t_labyrinthe* labyrinthe, t_move* p_move, t_move* p_move_adversaire, int* lab);
+void sortie_tableau_adv(t_joueur* joueur,t_move* p_move_adversaire, int sizeX, int sizeY);
+void sortie_tableau(t_joueur* joueur,t_move* p_move, int sizeX, int sizeY);

@@ -27,16 +27,17 @@ void init_tab_tuile(int* lab, t_tile* tab_tile, int sizeX, int sizeY){
 
 
 
-/*fonction iniTuile: recupère la tuile en dehors du labyrinthe
+/*fonction initTuile: recupère la tuile en dehors du labyrinthe
 *paramètres:
 *une tuile 
 *t_move correspondant à mon coup (contenant la tuile sortie lors du coup)*/
 
-void initTuile(t_tile tileOut, t_move* move){
-    tileOut.tileN = move->tileN;
-    tileOut.tileS = move->tileS;
-    tileOut.tileE = move->tileE;
-    tileOut.tileW = move->tileW;
+void initTuile(t_tile* tileOut, t_move* move){
+    tileOut->tileN = move->tileN;
+    tileOut->tileS = move->tileS;
+    tileOut->tileE = move->tileE;
+    tileOut->tileW = move->tileW;
+    tileOut->tileItem = move->tileItem;
 }
 
 
@@ -44,40 +45,40 @@ void initTuile(t_tile tileOut, t_move* move){
 /*fonction rotation tuile: permet de définir la rotation de la tuile en dehors
 *paramètres:
 *tuile en dehors tileOut
-*un entier permettant de garder un coté de la tuile(lors de la rotation)
+*un entier "save" permettant de garder un coté de la tuile(lors de la rotation)
 *un entier correspondant à la rotation(0, 1, 2 ou 3) */
 
-void rotationTuile(t_tile tileOut, int save, int rotation){
+void rotationTuile(t_tile* tileOut, int save, int rotation){
     //pas de rotation//
     if (rotation == 0){
     }  
 
     //rotation de 90°//
     else if (rotation == 1){
-        save = tileOut.tileN;
-        tileOut.tileN = tileOut. tileW;
-        tileOut.tileW = tileOut.tileS;
-        tileOut.tileS = tileOut.tileE;
-        tileOut.tileE = save;
+        save = tileOut->tileN;
+        tileOut->tileN = tileOut->tileW;
+        tileOut->tileW = tileOut->tileS;
+        tileOut->tileS = tileOut->tileE;
+        tileOut->tileE = save;
     }
 
     //rotation de 180°//
     else if (rotation == 2){
-        save = tileOut.tileN;
-        tileOut.tileN = tileOut. tileS;
-        tileOut.tileS = save;
-        save = tileOut.tileE;
-        tileOut.tileE = tileOut.tileW;
-        tileOut.tileW = save;
+        save = tileOut->tileN;
+        tileOut->tileN = tileOut->tileS;
+        tileOut->tileS = save;
+        save = tileOut->tileE;
+        tileOut->tileE = tileOut->tileW;
+        tileOut->tileW = save;
     }
 
     //rotation de 270°//
     else if (rotation == 3){
-        save = tileOut.tileN;
-        tileOut.tileN = tileOut. tileE;
-        tileOut.tileE = tileOut.tileS;
-        tileOut.tileS = tileOut.tileW;
-        tileOut.tileW = save;
+        save = tileOut->tileN;
+        tileOut->tileN = tileOut->tileE;
+        tileOut->tileE = tileOut->tileS;
+        tileOut->tileS = tileOut->tileW;
+        tileOut->tileW = save;
     }
 }
 
@@ -92,7 +93,7 @@ void rotationTuile(t_tile tileOut, int save, int rotation){
 *numero de la ligne ou colonne où l' on insère la tuile
 *dimensions du labyrinthe (sizeX-sizeY)*/
 
-void insertTuile(t_tile* tab_tile, t_tile tileOut, t_insertion insert, int number, int sizeX, int sizeY){
+void insertTuile(t_tile* tab_tile, t_tile* tileOut, t_insertion insert, int number, int sizeX, int sizeY){
     //insertion à gauche//
     if (insert == 0){
         //decalage de la ligne "number" vers la droite//
@@ -103,10 +104,10 @@ void insertTuile(t_tile* tab_tile, t_tile tileOut, t_insertion insert, int numbe
             tab_tile[i + number * sizeX].tileW = tab_tile[i + 1 + number * sizeX].tileW;
         }
         //ajout de la tuile en dehors à gauche de la ligne// 
-        tab_tile[0 + number * sizeX].tileN = tileOut.tileN;
-        tab_tile[0 + number * sizeX].tileS = tileOut.tileS;
-        tab_tile[0 + number * sizeX].tileE = tileOut.tileE;
-        tab_tile[0 + number * sizeX].tileW = tileOut.tileW;
+        tab_tile[0 + number * sizeX].tileN = tileOut->tileN;
+        tab_tile[0 + number * sizeX].tileS = tileOut->tileS;
+        tab_tile[0 + number * sizeX].tileE = tileOut->tileE;
+        tab_tile[0 + number * sizeX].tileW = tileOut->tileW;
     }
 
     //insertion à droite//
@@ -119,10 +120,10 @@ void insertTuile(t_tile* tab_tile, t_tile tileOut, t_insertion insert, int numbe
             tab_tile[i + number * sizeX].tileW = tab_tile[i - 1 + number * sizeX].tileW;
         }
         //ajout de la tuile en dehors à droite de la ligne//
-        tab_tile[sizeX - 1 + number * sizeX].tileN = tileOut.tileN;
-        tab_tile[sizeX - 1 + number * sizeX].tileS = tileOut.tileS;
-        tab_tile[sizeX - 1 + number * sizeX].tileE = tileOut.tileE;
-        tab_tile[sizeX - 1 + number * sizeX].tileW = tileOut.tileW;
+        tab_tile[sizeX - 1 + number * sizeX].tileN = tileOut->tileN;
+        tab_tile[sizeX - 1 + number * sizeX].tileS = tileOut->tileS;
+        tab_tile[sizeX - 1 + number * sizeX].tileE = tileOut->tileE;
+        tab_tile[sizeX - 1 + number * sizeX].tileW = tileOut->tileW;
     }
 
     //insertion par le dessus//
@@ -135,10 +136,10 @@ void insertTuile(t_tile* tab_tile, t_tile tileOut, t_insertion insert, int numbe
             tab_tile[number + j * sizeX].tileW = tab_tile[number + (j + 1) * sizeX].tileW;
         }
         //ajout de la tuile en dehors à la première case de la colonne//
-        tab_tile[number + 0 * sizeX].tileN = tileOut.tileN;
-        tab_tile[number + 0 * sizeX].tileS = tileOut.tileS;
-        tab_tile[number + 0 * sizeX].tileE = tileOut.tileE;
-        tab_tile[number + 0 * sizeX].tileW = tileOut.tileW;
+        tab_tile[number + 0 * sizeX].tileN = tileOut->tileN;
+        tab_tile[number + 0 * sizeX].tileS = tileOut->tileS;
+        tab_tile[number + 0 * sizeX].tileE = tileOut->tileE;
+        tab_tile[number + 0 * sizeX].tileW = tileOut->tileW;
     }
 
     //insertion par le dessous//
@@ -151,10 +152,10 @@ void insertTuile(t_tile* tab_tile, t_tile tileOut, t_insertion insert, int numbe
             tab_tile[number + j * sizeX].tileW = tab_tile[number + (j - 1) * sizeX].tileW;
         }
         //ajout de la tuile en dehors à la dernière case de la colonne//
-        tab_tile[number + (sizeY - 1) * sizeX].tileN = tileOut.tileN;
-        tab_tile[number + (sizeY - 1) * sizeX].tileS = tileOut.tileS;
-        tab_tile[number + (sizeY - 1) * sizeX].tileE = tileOut.tileE;
-        tab_tile[number + (sizeY - 1) * sizeX].tileW = tileOut.tileW;
+        tab_tile[number + (sizeY - 1) * sizeX].tileN = tileOut->tileN;
+        tab_tile[number + (sizeY - 1) * sizeX].tileS = tileOut->tileS;
+        tab_tile[number + (sizeY - 1) * sizeX].tileE = tileOut->tileE;
+        tab_tile[number + (sizeY - 1) * sizeX].tileW = tileOut->tileW;
     }
 }
 
@@ -246,9 +247,23 @@ int deplacement(int x_depart, int y_depart, int x_arrivee, int y_arrivee, int* t
 *p_move correspondant à mon coup
 *lab: le labyrinthe
 *dimensions du labyrinthe(sizeX-sizeY)*/
-int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t_tile* tab_tile, t_move* p_move, t_move* p_move_adversaire, int* lab){
+
+int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t_tile* tab_tile, t_move* p_move, t_move* p_move_adversaire, int* lab, t_tile* tileOut){
+    //sauvegarde de la position//
+    int copie_x = joueur->x;
+    int copie_y = joueur->y;
+    
+    /*cas où la tuile contenant le tresor en dehors,
+    *pas de coup gagnant possible*/ 
+    initTuile(tileOut, p_move_adversaire);
+    if (tileOut->tileItem == joueur->nextItem){
+        return -1;
+    }
+
+
+    //recherche de la position du trésor// 
     int k = 0;
-    int x_arrivee, y_arrivee; 
+    int x_arrivee, y_arrivee;
     for (int j = 0; j < sizeY; j ++){
         for(int i = 0; i < sizeX; i ++){
             if (tab_tile[k].tileItem == joueur->nextItem){
@@ -259,36 +274,44 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
         }
     }
 
+    //test pour chaque insertion possible si le trésor est atteignable//
     int save = 0; 
-    t_tile tileOut;
     t_insertion insert;	
     int number, rotation;
+
+    //insertion par une ligne (droite ou gauche//
     for(number = 1; number < sizeY; number ++){
-        if (number % 2 == 0){
+        if (number % 2 == 0){//ligne paire impossible//
         }
         else{
             for (rotation = 0; rotation <= 3; rotation ++){
                 for (insert = 0; insert <= 1; insert ++){
                     init_tab_tuile(lab, tab_tile, sizeX, sizeY);
-                    initTuile(tileOut, p_move);
+                    initTuile(tileOut, p_move_adversaire);
                     rotationTuile(tileOut, save, rotation);
                     insertTuile(tab_tile, tileOut, insert, number, sizeX, sizeY);
+                    p_move->insert = insert;
+                    p_move->number = number;
+                    p_move->rotation = rotation;
+                    sortie_tableau(joueur, p_move, sizeX, sizeY);//si l' insertion a fait bouger le pion//
+
+                    //coup permettant d' accéder au trésor//
                     if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
+                        //ne pas inserer du cote opposé à l' adversaire!//
                         if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                            p_move->insert = insert;
-                            p_move->number = number;
-                            p_move->rotation = rotation;
                             p_move->x = x_arrivee;
                             p_move->y = y_arrivee;
                             return 0;
                         }
                     }
-
+                    joueur->x = copie_x;
+                    joueur->y = copie_y;
                 }  
             }
         }
     }
 
+    //methode analogue mais pour les colonnes cette fois ci (insertion en haut ou en bas)//
     for(number = 1; number < sizeX; number ++){
         if (number % 2 == 0){
         }
@@ -296,24 +319,27 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
             for (rotation = 0; rotation <= 3; rotation ++){
                 for (insert = 2; insert <= 3; insert ++){
                     init_tab_tuile(lab, tab_tile, sizeX, sizeY);
-                    initTuile(tileOut, p_move);
+                    initTuile(tileOut, p_move_adversaire);
                     rotationTuile(tileOut, save, rotation);
                     insertTuile(tab_tile, tileOut, insert, number, sizeX, sizeY);
+                    p_move->insert = insert;
+                    p_move->number = number;
+                    p_move->rotation = rotation;
+                    sortie_tableau(joueur, p_move, sizeX, sizeY);
                     if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
                         if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                            p_move->insert = insert;
-                            p_move->number = number;
-                            p_move->rotation = rotation;
                             p_move->x = x_arrivee;
                             p_move->y = y_arrivee;
                             return 0;
                         }
                     }
+                    joueur->x = copie_x;
+                    joueur->y = copie_y;
                 }
             }
         }
     }
-    return -1;
+    return -1;//cas où aucun chemin ne mène au trésor//
 }
     
 
@@ -326,12 +352,17 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
 *lab: le labyrinthe
 *dimensions du labyrinthe(sizeX-sizeY)*/
 
-int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* p_move, t_move* p_move_adversaire, int* lab){
+int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* p_move, t_move* p_move_adversaire, int* lab, t_tile* tileOut ){
+    //sauvegarde de la position//
+    int copie_x = joueur->x;
+    int copie_y = joueur->y;
+
     int save = 0; 
-    t_tile tileOut;
     t_insertion insert;	
     int number, rotation;
 
+
+    //recherche d' un deplacement aléatoire possible en insérant usr une colonne//
     for(number = 1; number < sizeX; number ++){
         if (number % 2 == 0){
         }
@@ -339,16 +370,18 @@ int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* 
             for (rotation = 0; rotation <= 3; rotation ++){
                 for (insert = 2; insert <= 3; insert ++){
                     init_tab_tuile(lab, tab_tile, sizeX, sizeY);
-                    initTuile(tileOut, p_move);
+                    initTuile(tileOut, p_move_adversaire);
                     rotationTuile(tileOut, save, rotation);
                     insertTuile(tab_tile, tileOut, insert, number, sizeX, sizeY);
+                    p_move->insert = insert;
+                    p_move->number = number;
+                    p_move->rotation = rotation;
+                    sortie_tableau(joueur, p_move, sizeX, sizeY);//cas où l' insertion fait bouger le pion//
 
+                    //deplacement vers le haut//
                     if (tab_tile[joueur->x + sizeX * joueur->y].tileN != 1 && tab_tile[joueur->x + sizeX * (joueur->y - 1)].tileS != 1){
                         if (joueur->y > 0){
                             if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->insert = 0;
-                                p_move->number = 5;
-                                p_move->rotation = 0;
                                 p_move->x = joueur->x;
                                 p_move->y = joueur->y - 1;
                                 return 0;
@@ -356,13 +389,10 @@ int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* 
                         }
                     }
 
-
+                    //deplacement vers la droite//
                     if (tab_tile[joueur->x + sizeX * joueur->y].tileE != 1 && tab_tile[joueur->x + 1 + sizeX * joueur->y].tileW != 1){
-                        if (joueur->x < sizeX ){
+                        if (joueur->x < sizeX - 1 ){
                             if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->insert = 0;
-                                p_move->number = 5;
-                                p_move->rotation = 0;
                                 p_move->x = joueur->x + 1;
                                 p_move->y = joueur->y;
                                 return 0;
@@ -370,13 +400,10 @@ int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* 
                         }
                     }
 
-
+                    //deplacement vers le bas//
                     if (tab_tile[joueur->x + sizeX * joueur->y].tileS != 1 && tab_tile[joueur->x + sizeX * (joueur->y + 1)].tileN != 1){
-                        if (joueur->y < sizeY){
+                        if (joueur->y < sizeY - 1){
                             if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->insert = 0;
-                                p_move->number = 5;
-                                p_move->rotation = 0;
                                 p_move->x = joueur->x;  
                                 p_move->y = joueur->y + 1;
                                 return 0;
@@ -384,22 +411,25 @@ int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* 
                         }
                     }
 
+
+                    //deplacement vers la gauche//
                     if (tab_tile[joueur->x + sizeX * joueur->y].tileW != 1 && tab_tile[joueur->x - 1 + sizeX * joueur->y].tileE != 1){
                         if (joueur->x > 0){
                             if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->insert = 0;
-                                p_move->number = 5;
-                                p_move->rotation = 0;
                                 p_move->x = joueur->x - 1;
                                 p_move->y = joueur->y;
                                 return 0;
                             }
                         }
                     }
+                    joueur->x = copie_x;
+                    joueur->y = copie_y;
                 }
             }
         }
     }
+
+    //si aucun deplacement possible(très peu probable)//
     p_move->insert = 0;
     p_move->number = 1;
     p_move->rotation = 0;
