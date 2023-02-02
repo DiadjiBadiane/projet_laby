@@ -36,7 +36,7 @@ int main(){
     do{
         //tresor non atteignable//
         if (coup_gagnant(joueur, tab_deplacement, sizeX, sizeY, tab_tile, p_move,p_move_adversaire, lab, tileOut) == -1){
-            coup_joue(joueur, sizeX, sizeY, tab_tile, p_move, p_move_adversaire, lab, tileOut);
+            coup_joue(joueur, sizeX, sizeY, tab_tile, p_move, p_move_adversaire, lab, tileOut, tab_deplacement);
             sendMove(p_move);
         }
         //tresor atteignable//
@@ -47,8 +47,6 @@ int main(){
 
         miseAJourDonnees(joueur, adversaire, labyrinthe, p_move, p_move_adversaire, lab);
         printLabyrinth();
-        printf("\n\nmoi\n\n");
-
 
         //récupération du coup de l' adversaire//
         if (getMove(p_move_adversaire) == LOOSING_MOVE){

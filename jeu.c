@@ -197,7 +197,7 @@ int deplacement(int x_depart, int y_depart, int x_arrivee, int y_arrivee, int* t
             for(int colonne = 0; colonne < sizeX; colonne ++){
                 if (tab_deplacement[ligne * sizeX + colonne] == 0){
                     if (tab_tile[ligne * sizeX + colonne].tileN != 1 && tab_tile[(ligne - 1)* sizeX + colonne].tileS != 1){ //pas d'obstacle//
-                        if (ligne - 1 > 0 && tab_deplacement[(ligne - 1) * sizeX + colonne] == r){//voisine du case marquée et dans le tableau//
+                        if (ligne - 1 >= 0 && tab_deplacement[(ligne - 1) * sizeX + colonne] == r){//voisine du case marquée et dans le tableau//    
                            tab_deplacement[ligne * sizeX + colonne] = r + 1; 
                            a ++;
                         }
@@ -215,25 +215,25 @@ int deplacement(int x_depart, int y_depart, int x_arrivee, int y_arrivee, int* t
                         }
                     }
                     else if (tab_tile[ligne * sizeX + colonne].tileW != 1 && tab_tile[ligne * sizeX + colonne - 1].tileE != 1){ //pas d'obstacle//
-                        if (colonne - 1 > 0 && tab_deplacement[ligne * sizeX + colonne - 1] == r) { //voisine du case marquée et dans le tableau// 
+                        if (colonne - 1 >= 0 && tab_deplacement[ligne * sizeX + colonne - 1] == r) { //voisine du case marquée et dans le tableau// 
                             tab_deplacement[ligne * sizeX + colonne] = r + 1;
                             a ++;
                         }
-                    }   
+                    }
                 }
             }
         }
         //cas où l'arrivée n'est pas atteignable (à cause d' obstacle)//
         if (a == 0){
-            return -1;
+        return r;
         }
         //incrementation de r sinon//
         else{
             r++;
             a = 0;
-        }
+        }   
     }
-    return 0;
+    return -1;
 }
 
 
@@ -273,6 +273,7 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
             k ++;
         }
     }
+   
 
     //test pour chaque insertion possible si le trésor est atteignable//
     int save = 0; 
@@ -296,7 +297,7 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
                     sortie_tableau(joueur, p_move, sizeX, sizeY);//si l' insertion a fait bouger le pion//
 
                     //coup permettant d' accéder au trésor//
-                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
+                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == -1){
                         //ne pas inserer du cote opposé à l' adversaire!//
                         if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
                             p_move->x = x_arrivee;
@@ -326,7 +327,8 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
                     p_move->number = number;
                     p_move->rotation = rotation;
                     sortie_tableau(joueur, p_move, sizeX, sizeY);
-                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == 0){
+
+                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) == -1){
                         if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
                             p_move->x = x_arrivee;
                             p_move->y = y_arrivee;
@@ -339,9 +341,19 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
             }
         }
     }
+            for(int j = 0; j < sizeY; j ++){
+            for (int i = 0; i < sizeX; i ++){
+                printf("%d ", tab_deplacement[i + sizeX * j]);
+            }
+        printf("\n");
+        }
+
     return -1;//cas où aucun chemin ne mène au trésor//
 }
     
+
+
+
 
 
 /*fonction coup_joue: joue un coup normale si le trésor ne peut pas être récupéré
@@ -352,73 +364,91 @@ int coup_gagnant(t_joueur* joueur, int* tab_deplacement, int sizeX, int sizeY, t
 *lab: le labyrinthe
 *dimensions du labyrinthe(sizeX-sizeY)*/
 
-int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* p_move, t_move* p_move_adversaire, int* lab, t_tile* tileOut ){
-    //sauvegarde de la position//
-    int copie_x = joueur->x;
-    int copie_y = joueur->y;
+int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* p_move, t_move* p_move_adversaire, int* lab, t_tile* tileOut, int* tab_deplacement){
 
+
+    //recherche de la position du trésor// 
+    int k = 0;
+    int x_arrivee, y_arrivee;
+    for (int j = 0; j < sizeY; j ++){
+        for(int i = 0; i < sizeX; i ++){
+            if (tab_tile[k].tileItem == joueur->nextItem){
+                x_arrivee = i;
+                y_arrivee = j;
+            }
+            k ++;
+        }
+    }
+
+    //test pour chaque insertion possible si le trésor est atteignable//
     int save = 0; 
     t_insertion insert;	
     int number, rotation;
+    int a = 0;
+    int copie_x = joueur->x;
+    int copie_y = joueur->y;
+    //insertion par une ligne (droite ou gauche)//
+    for(number = 1; number < sizeY; number ++){
+        if (number % 2 != 0){//ligne paire impossible//
+            for (rotation = 0; rotation <= 3; rotation ++){
+                for (insert = 0; insert <= 1; insert ++){
+                    init_tab_tuile(lab, tab_tile, sizeX, sizeY);
+                    initTuile(tileOut, p_move_adversaire);
+                    rotationTuile(tileOut, save, rotation);
+                    insertTuile(tab_tile, tileOut, insert, number, sizeX, sizeY);
+                    sortie_tableau(joueur, p_move, sizeX, sizeY);//si l' insertion a fait bouger le pion//
 
-
-    //recherche d' un deplacement aléatoire possible en insérant usr une colonne//
-    for(number = 1; number < sizeX; number ++){
-        if (number % 2 == 0){
+                    //coup permettant d' accéder au trésor//
+                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) >= a){
+                        //ne pas inserer du cote opposé à l' adversaire!//
+                        if (p_move_adversaire->insert == insert || p_move_adversaire->number != number){
+                            a = deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile);
+                            for(int j = 0; j < sizeY; j ++){
+                                for (int i = 0; i < sizeX; i ++){
+                                    if (tab_deplacement[i + j * sizeX] == a){
+                                        p_move->insert = insert;
+                                        p_move->number = number;
+                                        p_move->rotation = rotation;
+                                        p_move->x = i;
+                                        p_move->y = j;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    joueur->x = copie_x;
+                    joueur->y = copie_y;
+                }  
+            }
         }
-        else{
+    }
+
+    //methode analogue mais pour les colonnes cette fois ci (insertion en haut ou en bas)//
+    for(number = 1; number < sizeX; number ++){
+        if(number % 2 != 0){
             for (rotation = 0; rotation <= 3; rotation ++){
                 for (insert = 2; insert <= 3; insert ++){
                     init_tab_tuile(lab, tab_tile, sizeX, sizeY);
                     initTuile(tileOut, p_move_adversaire);
                     rotationTuile(tileOut, save, rotation);
                     insertTuile(tab_tile, tileOut, insert, number, sizeX, sizeY);
-                    p_move->insert = insert;
-                    p_move->number = number;
-                    p_move->rotation = rotation;
-                    sortie_tableau(joueur, p_move, sizeX, sizeY);//cas où l' insertion fait bouger le pion//
+                    sortie_tableau(joueur, p_move, sizeX, sizeY);
 
-                    //deplacement vers le haut//
-                    if (tab_tile[joueur->x + sizeX * joueur->y].tileN != 1 && tab_tile[joueur->x + sizeX * (joueur->y - 1)].tileS != 1){
-                        if (joueur->y > 0){
-                            if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->x = joueur->x;
-                                p_move->y = joueur->y - 1;
-                                return 0;
-                            }
-                        }
-                    }
-
-                    //deplacement vers la droite//
-                    if (tab_tile[joueur->x + sizeX * joueur->y].tileE != 1 && tab_tile[joueur->x + 1 + sizeX * joueur->y].tileW != 1){
-                        if (joueur->x < sizeX - 1 ){
-                            if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->x = joueur->x + 1;
-                                p_move->y = joueur->y;
-                                return 0;
-                            }
-                        }
-                    }
-
-                    //deplacement vers le bas//
-                    if (tab_tile[joueur->x + sizeX * joueur->y].tileS != 1 && tab_tile[joueur->x + sizeX * (joueur->y + 1)].tileN != 1){
-                        if (joueur->y < sizeY - 1){
-                            if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->x = joueur->x;  
-                                p_move->y = joueur->y + 1;
-                                return 0;
-                            }
-                        }
-                    }
-
-
-                    //deplacement vers la gauche//
-                    if (tab_tile[joueur->x + sizeX * joueur->y].tileW != 1 && tab_tile[joueur->x - 1 + sizeX * joueur->y].tileE != 1){
-                        if (joueur->x > 0){
-                            if (p_move_adversaire->insert == p_move->insert || p_move_adversaire->number != p_move->number){
-                                p_move->x = joueur->x - 1;
-                                p_move->y = joueur->y;
-                                return 0;
+                    //coup permettant d' accéder au trésor//
+                    if (deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile) >= a){
+                        //ne pas inserer du cote opposé à l' adversaire!//
+                        if (p_move_adversaire->insert == insert || p_move_adversaire->number != number){
+                            a = deplacement(joueur->x, joueur->y, x_arrivee, y_arrivee, tab_deplacement, sizeX, sizeY, tab_tile);
+                            for(int j = 0; j < sizeY; j ++){
+                                for (int i = 0; i < sizeX; i ++){
+                                    if (tab_deplacement[i + j * sizeX] == a){
+                                        p_move->insert = insert;
+                                        p_move->number = number;
+                                        p_move->rotation = rotation;
+                                        p_move->x = i;
+                                        p_move->y = j;
+                                    }
+                                }
                             }
                         }
                     }
@@ -428,13 +458,7 @@ int coup_joue(t_joueur* joueur, int sizeX, int sizeY, t_tile* tab_tile, t_move* 
             }
         }
     }
-
-    //si aucun deplacement possible(très peu probable)//
-    p_move->insert = 0;
-    p_move->number = 1;
-    p_move->rotation = 0;
-    p_move->x = joueur->x;
-    p_move->y = joueur->y;
+     printf("\n\n%d %d %d %d %d\n\n", p_move->insert, p_move->number, p_move->rotation, p_move->x, p_move->y);
     return 0;
 }    
                 
